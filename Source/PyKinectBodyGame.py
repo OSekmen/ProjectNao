@@ -156,7 +156,7 @@ class BodyGameRuntime(object):
                     punten = [joints[PyKinectV2.JointType_Head].Position.x,
                              joints[PyKinectV2.JointType_Head].Position.y,
                              joints[PyKinectV2.JointType_Head].Position.z]
-                    print(punten)
+                    #print(punten)
                     # convert joint coordinates to color space 
                     joint_points = self._kinect.body_joints_to_color_space(joints)
                     self.draw_body(joints, joint_points, SKELETON_COLORS[i])
