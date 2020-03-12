@@ -1,4 +1,4 @@
-shoulder# -*- coding: mbcs -*-
+# -*- coding: mbcs -*-
 typelib_path = 'c:\\Users\\vladkol\\Documents\\PyKinect2\\idl\\Kinect.tlb'
 _lcid = 0 # change this if required
 import ctypes 

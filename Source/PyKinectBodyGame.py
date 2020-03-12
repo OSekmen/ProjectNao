@@ -51,12 +51,14 @@ class BodyGameRuntime(object):
 
         # back buffer surface for getting Kinect color frames, 32bit color, width and height equal to the Kinect color frame size
         self._frame_surface = pygame.Surface((self._kinect.color_frame_desc.Width, self._kinect.color_frame_desc.Height), 0, 32)
+        
+        self._frame_depth_surface = pygame.Surface((self._kinect.depth_frame_desc.Width, self._kinect.depth_frame_desc.Height), 0, 32)
 
         # here we will store skeleton data 
         self._bodies = None
 
 
-    def draw_body_bone(self, joints, jointPoints, color, joint0, joint1):
+    def draw_body_bone(self, joints, jointPoints, color, joint0, joint1)
         joint0State = joints[joint0].TrackingState
         joint1State = joints[joint1].TrackingState
 
@@ -136,6 +138,13 @@ class BodyGameRuntime(object):
 
             # --- Getting frames and drawing  
             # --- Woohoo! We've got a color frame! Let's fill out back buffer surface with frame's data 
+            
+            
+            #if self._kinect.has_new_color_frame():
+            #    frame = self._kinect.get_last_color_frame()
+            #    self.draw_color_frame(frame, self._frame_surface)
+            #    frame = None
+
             if self._kinect.has_new_color_frame():
                 frame = self._kinect.get_last_color_frame()
                 self.draw_color_frame(frame, self._frame_surface)
