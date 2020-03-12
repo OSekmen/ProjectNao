@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3">
+    <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+        <bitmap>media/images/box/root.png</bitmap>
+        <script language="4">
+            <content>
+                <![CDATA[]]>
+</content>
+        </script>
+        <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+        <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+        <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+        <Timeline enable="0">
+            <BehaviorLayer name="behavior_layer1">
+                <BehaviorKeyframe name="keyframe1" index="1">
+                    <Diagram>
+                        <Box name="Basis beweging " id="1" localization="8" tooltip="met deze functie kan je alle joints bewegen " x="368" y="66">
+                            <bitmap>media/images/box/movement/move.png</bitmap>
+                            <script language="4">
+                                <content>
+                                    <![CDATA[import naoqi
+import math
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.memProxy = ALProxy("ALMemory","localhost",53984)
+
+    def onLoad(self):
+        #put initialization code here
+
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+
+        motionProxy = ALProxy("ALMotion")
+        hoeken = self.memProxy.getData("hoeken")
+        self.log(hoeken[1])
+        #self.log("hoeken")
+
+
+        All  = ['HeadYaw','HeadPitch',
+                'LShoulderPitch','LShoulderRoll','LElbowYaw','LElbowRoll','LWristYaw','LHand',
+                'RShoulderPitch','RShoulderRoll','RElbowYaw','RElbowRoll','RWristYaw','RHand',
+                'LHipYawPitch','LHipRoll','LHipPitch','LKneePitch','LAnklePitch','LAnkleRoll',
+                'RHipYawPitch','RHipRoll','RHipPitch','RKneePitch','RAnklePitch','RAnkleRoll']
+
+        Times =  [[1.0],[1.0],
+                 [1.0],[1.0],[1.0],[1.0],[1.0],[1.0],
+                 [1.0],[1.0],[1.0],[1.0],[1.0],[1.0],
+                 [1.0],[1.0],[1.0],[1.0],[1.0],[1.0],
+                 [1.0],[1.0],[1.0],[1.0],[1.0],[1.0]]
+
+
+
+        #Head
+        HeadYaw           = 0.0  # -2.08 - +2.08
+        HeadPitch         = 0.0  # -0.052*HeadYaw^4 +0.28*HeadYaw^2 -0.70 tot
+                                 #  0.042*HeadYaw^4 -0.22*HeadYaw^2 +0.48
+
+
+        #Larm
+        LShoulderPitch    = 0.0  # -2.08 - +2.08
+        LShoulderRoll     = 0.0  # -0.31 - +1.32
+        LElbowYaw         = 0.0  # -2.08 - +2.08
+        LElbowRoll        = 0.0  # -1.54 - +0.03
+        LWristYaw         = 0.0  # -1.82 - +1.82
+        LHand             = 0.0  # -close- +openS
+
+        #Rarm
+        RShoulderPitch    = 0.0  # -2.08 - +2.08
+        RShoulderRoll     = 0.0  # -1.32 - +0.31
+        RElbowYaw         = 0.0  # -2.08 - +2.08
+        RElbowRoll        = 0.0  # -0.03 - +1.54
+        RWristYaw         = 0.0  # -1.82 - +1.82
+        RHand             = 0.0  # -close- +open
+
+        #LLeg
+        LHipYawPitch      = 0.0  # -1.14 - +0.74
+        LHipRoll          = 0.0  # -0.37 - +0.79
+        LHipPitch         = 0.0  # -1.53 - +0.48
+        LKneePitch        = 0.0  # -0.09 - +2.11
+        LAnklePitch       = 0.0  # -1.18 - +0.92
+        LAnkleRoll        = 0.0  # -0.39 - +0.76
+
+        #RLeg
+        RHipYawPitch      = 0.0  # -1.14 - +0.74
+        RHipRoll          = 0.0  # -0.37 - +0.79
+        RHipPitch         = 0.0  # -1.53 - +0.48
+        RKneePitch        = 0.0  # -0.09 - +2.11
+        RAnklePitch       = 0.0  # -1.18 - +0.92
+        RAnkleRoll        = 0.0  # -0.39 - +0.76
+
+        ALLIn   = [HeadYaw,HeadPitch,
+                   LShoulderPitch,LShoulderRoll,LElbowYaw,LElbowRoll,LWristYaw,LHand,
+                   RShoulderPitch,RShoulderRoll,RElbowYaw,RElbowRoll,RWristYaw,RHand,
+                   LHipYawPitch,LHipRoll,LHipPitch,LKneePitch,LAnklePitch,LAnkleRoll,
+                   RHipYawPitch,RHipRoll,RHipPitch,RKneePitch,RAnklePitch,RAnkleRoll]
+
+        for i in range (0,6,1):
+            motionProxy.angleInterpolation(All,hoeken[i],Times, True)
+
+        self.onStopped()
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]>
+</content>
+                            </script>
+                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                            <Input name="onStart" type="0" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                            <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+                            <Input name="HeadIn" type="1" type_size="1" nature="2" inner="0" tooltip="" id="4" />
+                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="5" />
+                            <Parameter name="parameter" inherits_from_parent="0" content_type="4" value="" default_value="" tooltip="" id="6" />
+                        </Box>
+                        <Box name="send" id="2" localization="8" tooltip="" x="156" y="61">
+                            <bitmap>media/images/box/box-python-script.png</bitmap>
+                            <script language="4">
+                                <content>
+                                    <![CDATA[class MyClass(GeneratedClass):
+    import math
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.memProxy = ALProxy("ALMemory","localhost",53984)
+
+        self.hoek  = [1.0]
+
+    def onLoad(self):
+        #put initialization code here
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+        phi = 0.5
+        hoek_3D_shoulderPitch = math.cos(phi)*0.63
+        hoek_3D_shoulderRoll = math.sin(phi)
+
+                     #  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26
+        self.AllIN = [[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],
+                      [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],
+                      [0.0,0.0,0.5,0.0,-0.2,-0.5,0.0,0.5,0.5,0.0,0.2,0.5,0.0,0.5,0.0,0.1,-0.5,0.5,0.0,0.0,0.0,0.0,-0.5,0.5,0.0,0.0],
+                      [0.0,0.0,0.5,0.0,-0.2,-0.5,0.0,1.0,0.5,0.0,0.2,0.5,0.0,1.0,0.0,0.1,-1.1,1.0,0.0,0.0,0.0,0.0,-1.1,1.0,0.0,0.0],
+                      [0.0,0.0,0.75,0.0,0.0,0.0,0.0,1.0,0.75,0.0,0.0,0.0,0.0,1.0,0.0,0.1,-0.6,0.5,0.0,0.0,0.0,0.0,-0.6,0.5,0.0,0.0],
+                      [0.0,0.0,0.25,0.0,0.0,0.0,0.0,0.0,0.25,0.0,0.0,0.0,0.0,0.0,0.0,0.1,-0.3,0.25,0.0,0.0,0.0,0.0,-0.3,0.25,0.0,0.0]]
+                             #[                       ]
+        #self.AllIN = [[0.0,0.0,hoek_3D_shoulderPitch,hoek_3D_shoulderRoll,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],
+        #              [0.0,0.0,hoek_3D_shoulderPitch,hoek_3D_shoulderRoll,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],
+        #             [0.0,0.0,0.0,0.0,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,0.0,0.0,0.0,0.0,0.0,-0.0,0.0,0.0,0.0],
+        #              [0.0,0.0,0.0,0.0,-0.0,-0.0,0.0,.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,0.0,0.0,0.0,0.0,0.0,-0.0,0.0,0.0,0.0],
+        #              [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,0.0,0.0,0.0,0.0,0.0,-0.0,0.0,0.0,0.0],
+        #              [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,0.0,0.0,0.0,0.0,0.0,-0.0,0.0,0.0,0.0]]
+
+        hoek_3D_shoulderPitch = math.cos(0) + math.sin(0)
+        hoek_3D_shoulderPitch = math.sin(0) + math.sin(0)
+
+        keypoints = [[558.44,276.047,0.915308],[491.13,276.048,0.837247],[376.665,295.901,0.904288],[255.84,289.658,0.828859]]
+
+        for i in range (0,2,1):
+            Delta_X = ((keypoints[i][0])- (keypoints[i+1][0]))
+            Delta_Y = ((keypoints[i][1])- (keypoints[i+1][1]))
+            hoek    =  math.atan(Delta_X/Delta_Y)
+            self.log (hoek)
+            #self.AllIN [i][i+2] = -hoek
+
+        keypoints2 =  [[600,200],[625,201],[700,300],[900,301]]
+        for i in range (0,3,1):
+            Delta_X = ((keypoints2[i][0])- (keypoints2[i+1][0]))
+            Delta_Y = ((keypoints2[i][1])- (keypoints2[i+1][1]))
+            hoek2    =  math.atan(Delta_X/Delta_Y)
+            self.log (hoek2)
+            #self.AllIN [i][i+8] = hoek2
+
+
+
+        self.memProxy.insertData("hoeken",self.AllIN)
+        self.onStopped() #activate the output of the box
+        #self.myOutput(AllIN)
+        pass
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]>
+</content>
+                            </script>
+                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                            <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                            <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+                        </Box>
+                        <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="5" />
+                        <Link inputowner="1" indexofinput="2" outputowner="2" indexofoutput="4" />
+                        <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="2" />
+                    </Diagram>
+                </BehaviorKeyframe>
+            </BehaviorLayer>
+        </Timeline>
+    </Box>
+</ChoregrapheProject>
