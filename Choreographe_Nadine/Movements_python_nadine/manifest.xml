@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <package uuid="movements_python_nadine-1debf1">
- <names>
-  <name lang="en_US">Movements_python_nadine</name>
- </names>
- <supportedLanguages>
-  <language>en_US</language>
- </supportedLanguages>
- <descriptionLanguages>
-  <language>en_US</language>
- </descriptionLanguages>
- <contents>
-  <behaviorContent path="behavior_1">
-   <nature>interactive</nature>
-   <permissions/>
-  </behaviorContent>
- </contents>
+  <names>
+    <name lang="en_US">Movements_python_nadine</name>
+  </names>
+  <supportedLanguages>
+    <language>en_US</language>
+  </supportedLanguages>
+  <descriptionLanguages>
+    <language>en_US</language>
+  </descriptionLanguages>
+  <contents>
+    <behaviorContent path="behavior_1">
+      <nature>interactive</nature>
+      <permissions/>
+    </behaviorContent>
+  </contents>
 </package>
